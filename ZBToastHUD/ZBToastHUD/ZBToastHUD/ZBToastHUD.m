@@ -8,6 +8,8 @@
 
 #import "ZBToastHUD.h"
 
+static const CGFloat ZBToastHUDToastDismissDuration = 3.0;
+
 @interface ZBToastHUD () <CAAnimationDelegate>
 
 // loading
@@ -313,7 +315,7 @@
         self.toastHUDView.transform = CGAffineTransformIdentity;
         self.toastHUDView.alpha = 1;
     } completion:^(BOOL finished) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(ZBToastHUDToastDismissDuration * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [self dismissToast];
         });
     }];

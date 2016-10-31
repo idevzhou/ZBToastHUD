@@ -7,13 +7,7 @@
 //
 
 #import "UIViewController+ZBToastHUD.h"
-#import <objc/runtime.h>
-
-@interface UIViewController ()
-
-@property (nonatomic, strong) ZBToastHUD *hud;
-
-@end
+#import "UIView+ZBToastHUD.h"
 
 @implementation UIViewController (ZBToastHUD)
 
@@ -36,11 +30,7 @@
 
 - (void)zb_showLoadingWithStyle:(ZBToastHUDLoadingStyle)style maskType:(ZBToastHUDLoadingMaskType)maskType
 {
-    self.hud = [[ZBToastHUD alloc] init];
-    self.hud.style = style;
-    [self.hud showLoadingWithMaskType:maskType];
-    [self.view addSubview:self.hud];
-    [self.view bringSubviewToFront:self.hud];
+    [self.view zb_showLoadingWithStyle:style maskType:maskType];
 }
 
 - (void)zb_dismissLoading
@@ -60,80 +50,44 @@
 
 - (void)zb_dismissLoadingWithDelay:(NSTimeInterval)delay completion:(ZBToastHUDLoadingDismissCompletion)completion
 {
-    [self.hud dismissLoadingWithDelay:delay completion:completion];
+    [self.view zb_dismissLoadingWithDelay:delay completion:completion];
 }
 
 // toast
 
 - (void)zb_showWithMessage:(NSString *)message
 {
-    [self.hud dismissToast];
-    self.hud = [[ZBToastHUD alloc] init];
-    [self.hud showWithMessage:message];
-    [self.view addSubview:self.hud];
-    [self.view bringSubviewToFront:self.hud];
+    [self.view zb_showWithMessage:message];
 }
 
 - (void)zb_showNoNetwork
 {
-    [self.hud dismissToast];
-    self.hud = [[ZBToastHUD alloc] init];
-    [self.hud showNoNetwork];
-    [self.view addSubview:self.hud];
-    [self.view bringSubviewToFront:self.hud];
+    [self.view zb_showNoNetwork];
 }
 
 - (void)zb_showSuccessWithMessage:(NSString *)message
 {
-    [self.hud dismissToast];
-    self.hud = [[ZBToastHUD alloc] init];
-    [self.hud showSuccessWithMessage:message];
-    [self.view addSubview:self.hud];
-    [self.view bringSubviewToFront:self.hud];
+    [self.view zb_showSuccessWithMessage:message];
 }
 
 - (void)zb_showErrorWithMessage:(NSString *)message
 {
-    [self.hud dismissToast];
-    self.hud = [[ZBToastHUD alloc] init];
-    [self.hud showErrorWithMessage:message];
-    [self.view addSubview:self.hud];
-    [self.view bringSubviewToFront:self.hud];
+    [self.view zb_showErrorWithMessage:message];
 }
 
 - (void)zb_showWarningWithMessage:(NSString *)message
 {
-    [self.hud dismissToast];
-    self.hud = [[ZBToastHUD alloc] init];
-    [self.hud showWarningWithMessage:message];
-    [self.view addSubview:self.hud];
-    [self.view bringSubviewToFront:self.hud];
+    [self.view zb_showWarningWithMessage:message];
 }
 
 - (void)zb_showImage:(UIImage *)image message:(NSString *)message
 {
-    [self.hud dismissToast];
-    self.hud = [[ZBToastHUD alloc] init];
-    [self.hud showImage:image message:message];
-    [self.view addSubview:self.hud];
-    [self.view bringSubviewToFront:self.hud];
+    [self.view zb_showImage:image message:message];
 }
 
 - (void)zb_dismissToast
 {
-    [self.hud dismissToast];
-}
-
-#pragma mark - getter and setter
-
-- (void)setHud:(ZBToastHUD *)hud
-{
-    objc_setAssociatedObject(self, @selector(hud), hud, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (ZBToastHUD *)hud
-{
-    return objc_getAssociatedObject(self, @selector(hud));
+    [self.view zb_dismissToast];
 }
 
 @end
