@@ -25,7 +25,6 @@ static NSString *const ZBToastHUDLoadingAnimationKey = @"rotationAnimation";
 
 //
 @property (nonatomic, assign) BOOL isLoadingHUD;
-@property (nonatomic, assign) BOOL isStartingAnim;
 
 @end
 
@@ -41,7 +40,6 @@ static NSString *const ZBToastHUDLoadingAnimationKey = @"rotationAnimation";
         self.style = ZBToastHUDLoadingStyleDark;
         self.maskType = ZBToastHUDLoadingMaskTypeNone;
         self.isLoadingHUD = NO;
-        self.isStartingAnim = NO;
     }
     return self;
 }
@@ -144,26 +142,10 @@ static NSString *const ZBToastHUDLoadingAnimationKey = @"rotationAnimation";
     
 }
 
-#pragma mark - CAAnimationDelegate
-
-- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag
-{
-    if ([self.loadingHUDView.layer valueForKey:ZBToastHUDLoadingAnimationKey] == anim)
-    {
-        if (self.isStartingAnim) {
-            [self startRotationAnimation];
-        } else {
-            [self stopRotationAnimation];
-        }
-    }
-}
-
 #pragma mark - private method
 
 - (void)startRotationAnimation
 {
-    self.isStartingAnim = YES;
-    
     CABasicAnimation *rotationAnimation;
     rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
     rotationAnimation.fromValue = @(0);
@@ -172,13 +154,12 @@ static NSString *const ZBToastHUDLoadingAnimationKey = @"rotationAnimation";
     rotationAnimation.cumulative = YES;
     rotationAnimation.repeatCount = HUGE_VAL;
     rotationAnimation.delegate = self;
+    rotationAnimation.removedOnCompletion = NO;
     [self.loadingImageView.layer addAnimation:rotationAnimation forKey:ZBToastHUDLoadingAnimationKey];
 }
 
 - (void)stopRotationAnimation
 {
-    self.isStartingAnim = NO;
-    
     [self.loadingImageView.layer removeAnimationForKey:ZBToastHUDLoadingAnimationKey];
 }
 
