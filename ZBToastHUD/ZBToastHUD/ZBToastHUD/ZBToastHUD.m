@@ -9,6 +9,7 @@
 #import "ZBToastHUD.h"
 
 static const CGFloat ZBToastHUDToastDismissDuration = 3.0;
+static NSString *const ZBToastHUDLoadingAnimationKey = @"rotationAnimation";
 
 @interface ZBToastHUD () <CAAnimationDelegate>
 
@@ -24,6 +25,7 @@ static const CGFloat ZBToastHUDToastDismissDuration = 3.0;
 
 //
 @property (nonatomic, assign) BOOL isLoadingHUD;
+@property (nonatomic, assign) BOOL isStartingAnim;
 
 @end
 
@@ -39,6 +41,7 @@ static const CGFloat ZBToastHUDToastDismissDuration = 3.0;
         self.style = ZBToastHUDLoadingStyleDark;
         self.maskType = ZBToastHUDLoadingMaskTypeNone;
         self.isLoadingHUD = NO;
+        self.isStartingAnim = NO;
     }
     return self;
 }
@@ -141,10 +144,26 @@ static const CGFloat ZBToastHUDToastDismissDuration = 3.0;
     
 }
 
+#pragma mark - CAAnimationDelegate
+
+- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag
+{
+    if ([self.loadingHUDView.layer valueForKey:ZBToastHUDLoadingAnimationKey] == anim)
+    {
+        if (self.isStartingAnim) {
+            [self startRotationAnimation];
+        } else {
+            [self stopRotationAnimation];
+        }
+    }
+}
+
 #pragma mark - private method
 
 - (void)startRotationAnimation
 {
+    self.isStartingAnim = YES;
+    
     CABasicAnimation *rotationAnimation;
     rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
     rotationAnimation.fromValue = @(0);
@@ -153,12 +172,14 @@ static const CGFloat ZBToastHUDToastDismissDuration = 3.0;
     rotationAnimation.cumulative = YES;
     rotationAnimation.repeatCount = HUGE_VAL;
     rotationAnimation.delegate = self;
-    [self.loadingImageView.layer addAnimation:rotationAnimation forKey:@"rotationAnimation"];
+    [self.loadingImageView.layer addAnimation:rotationAnimation forKey:ZBToastHUDLoadingAnimationKey];
 }
 
 - (void)stopRotationAnimation
 {
-    [self.loadingImageView.layer removeAnimationForKey:@"rotationAnimation"];
+    self.isStartingAnim = NO;
+    
+    [self.loadingImageView.layer removeAnimationForKey:ZBToastHUDLoadingAnimationKey];
 }
 
 - (UIColor *)colorWithValue:(NSUInteger)rgbValue
