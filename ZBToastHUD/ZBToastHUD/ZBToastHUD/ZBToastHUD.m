@@ -155,6 +155,7 @@ static NSString *const ZBToastHUDLoadingAnimationKey = @"rotationAnimation";
     rotationAnimation.repeatCount = HUGE_VAL;
     rotationAnimation.delegate = self;
     rotationAnimation.removedOnCompletion = NO;
+    rotationAnimation.fillMode = kCAFillModeForwards;
     [self.loadingImageView.layer addAnimation:rotationAnimation forKey:ZBToastHUDLoadingAnimationKey];
 }
 
