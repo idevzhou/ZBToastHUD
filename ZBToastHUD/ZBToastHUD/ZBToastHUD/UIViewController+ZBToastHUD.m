@@ -90,4 +90,11 @@
     [self.view zb_dismissToast];
 }
 
+// loading and toast
+
+- (void)dismiss
+{
+    [self.view dismiss];
+}
+
 @end
