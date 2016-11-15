@@ -36,6 +36,7 @@
 
 - (void)zb_showLoadingWithStyle:(ZBToastHUDLoadingStyle)style maskType:(ZBToastHUDLoadingMaskType)maskType
 {
+    [self.hud dismiss];
     self.hud = [[ZBToastHUD alloc] init];
     self.hud.style = style;
     [self.hud showLoadingWithMaskType:maskType];
@@ -67,7 +68,7 @@
 
 - (void)zb_showWithMessage:(NSString *)message
 {
-    [self.hud dismissToast];
+    [self.hud dismiss];
     self.hud = [[ZBToastHUD alloc] init];
     [self.hud showWithMessage:message];
     [self addSubview:self.hud];
@@ -76,7 +77,7 @@
 
 - (void)zb_showNoNetwork
 {
-    [self.hud dismissToast];
+    [self.hud dismiss];
     self.hud = [[ZBToastHUD alloc] init];
     [self.hud showNoNetwork];
     [self addSubview:self.hud];
@@ -85,7 +86,7 @@
 
 - (void)zb_showSuccessWithMessage:(NSString *)message
 {
-    [self.hud dismissToast];
+    [self.hud dismiss];
     self.hud = [[ZBToastHUD alloc] init];
     [self.hud showSuccessWithMessage:message];
     [self addSubview:self.hud];
@@ -94,7 +95,7 @@
 
 - (void)zb_showErrorWithMessage:(NSString *)message
 {
-    [self.hud dismissToast];
+    [self.hud dismiss];
     self.hud = [[ZBToastHUD alloc] init];
     [self.hud showErrorWithMessage:message];
     [self addSubview:self.hud];
@@ -103,7 +104,7 @@
 
 - (void)zb_showWarningWithMessage:(NSString *)message
 {
-    [self.hud dismissToast];
+    [self.hud dismiss];
     self.hud = [[ZBToastHUD alloc] init];
     [self.hud showWarningWithMessage:message];
     [self addSubview:self.hud];
@@ -112,7 +113,7 @@
 
 - (void)zb_showImage:(UIImage *)image message:(NSString *)message
 {
-    [self.hud dismissToast];
+    [self.hud dismiss];
     self.hud = [[ZBToastHUD alloc] init];
     [self.hud showImage:image message:message];
     [self addSubview:self.hud];
@@ -122,6 +123,13 @@
 - (void)zb_dismissToast
 {
     [self.hud dismissToast];
+}
+
+// loading and toast
+
+- (void)dismiss
+{
+    [self.hud dismiss];
 }
 
 #pragma mark - getter and setter

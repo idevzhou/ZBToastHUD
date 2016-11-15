@@ -47,4 +47,8 @@ typedef void (^ZBToastHUDLoadingDismissCompletion)(void);
 
 - (void)dismissToast;
 
+// loading and toast
+
+- (void)dismiss; // dismiss all hud, include loading and toast
+
 @end

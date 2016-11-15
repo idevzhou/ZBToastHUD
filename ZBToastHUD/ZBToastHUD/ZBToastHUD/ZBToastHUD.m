@@ -239,7 +239,7 @@ static NSString *const ZBToastHUDLoadingAnimationKey = @"rotationAnimation";
 
 - (void)dismissLoadingWithDelay:(NSTimeInterval)delay completion:(ZBToastHUDLoadingDismissCompletion)completion
 {
-    if (self.hidden == YES) {
+    if (self.hidden == YES || self.loadingHUDView == nil) {
         return;
     }
     
@@ -248,7 +248,6 @@ static NSString *const ZBToastHUDLoadingAnimationKey = @"rotationAnimation";
     }
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        
         self.hidden = YES;
         [self stopRotationAnimation];
         [self removeFromSuperview];
@@ -326,8 +325,26 @@ static NSString *const ZBToastHUDLoadingAnimationKey = @"rotationAnimation";
 
 - (void)dismissToast
 {
+    if (self.hidden == YES || self.toastHUDView == nil) {
+        return;
+    }
+    
     self.hidden = YES;
     [self removeFromSuperview];
+}
+
+// loading and toast
+
+- (void)dismiss
+{
+    if (self.loadingHUDView != nil)
+    {
+        [self dismissLoading];
+    }
+    if (self.toastHUDView != nil)
+    {
+        [self dismissToast];
+    }
 }
 
 #pragma mark - getter and setter
