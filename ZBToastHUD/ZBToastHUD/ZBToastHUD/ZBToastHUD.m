@@ -109,7 +109,8 @@ static NSString *const ZBToastHUDLoadingAnimationKey = @"rotationAnimation";
                 toastMessageLabelWidth = screenWidth*0.75-24;
             }
             
-            self.toastHUDView.frame = CGRectMake((screenWidth-(toastMessageLabelWidth+24))/2.0, (screenHeight-76)/2.0, toastMessageLabelWidth+24, 76);
+            self.frame = CGRectMake((screenWidth-(toastMessageLabelWidth+24))/2.0, (screenHeight-76)/2.0, toastMessageLabelWidth+24, 76);
+            self.toastHUDView.frame = self.bounds;
             self.toastImageView.frame = CGRectMake((toastMessageLabelWidth+24-24)/2.0, 18, 24, 24);
             self.toastMessageLabel.frame = CGRectMake(12, CGRectGetMaxY(self.toastImageView.frame)+8, toastMessageLabelWidth, 13);
         }
@@ -119,7 +120,8 @@ static NSString *const ZBToastHUDLoadingAnimationKey = @"rotationAnimation";
             // single line
             if (toastMessageLabelWidth <= screenWidth*0.75-24)
             {
-                self.toastHUDView.frame = CGRectMake((screenWidth-(toastMessageLabelWidth+24))/2.0, (screenHeight-44)/2.0, toastMessageLabelWidth+24, 44);
+                self.frame = CGRectMake((screenWidth-(toastMessageLabelWidth+24))/2.0, (screenHeight-44)/2.0, toastMessageLabelWidth+24, 44);
+                self.toastHUDView.frame = self.bounds;
                 self.toastImageView.frame = CGRectZero;
                 self.toastMessageLabel.frame = CGRectMake(12, (44-15)/2.0, toastMessageLabelWidth, 15);
             }
@@ -133,7 +135,8 @@ static NSString *const ZBToastHUDLoadingAnimationKey = @"rotationAnimation";
                 self.toastMessageLabel.attributedText = messageAttributedText;
                 self.toastMessageLabel.textAlignment = NSTextAlignmentCenter;
                 
-                self.toastHUDView.frame = CGRectMake((screenWidth-(toastMessageLabelWidth+24))/2.0, (screenHeight-(toastMessageLabelHeight+24))/2.0, toastMessageLabelWidth+24, toastMessageLabelHeight+24);
+                self.frame = CGRectMake((screenWidth-(toastMessageLabelWidth+24))/2.0, (screenHeight-(toastMessageLabelHeight+24))/2.0, toastMessageLabelWidth+24, toastMessageLabelHeight+24);
+                self.toastHUDView.frame = self.bounds;
                 self.toastImageView.frame = CGRectZero;
                 self.toastMessageLabel.frame = CGRectMake(12, 12, toastMessageLabelWidth, toastMessageLabelHeight);
             }
