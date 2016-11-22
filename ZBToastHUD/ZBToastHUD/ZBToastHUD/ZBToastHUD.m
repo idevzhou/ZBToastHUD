@@ -8,7 +8,7 @@
 
 #import "ZBToastHUD.h"
 
-static const CGFloat ZBToastHUDToastDismissDuration = 3.0;
+static const CGFloat ZBToastHUDToastDismissDuration = 1.0;
 static NSString *const ZBToastHUDLoadingAnimationKey = @"rotationAnimation";
 
 @interface ZBToastHUD () <CAAnimationDelegate>
