@@ -92,9 +92,9 @@
 
 // loading and toast
 
-- (void)dismiss
+- (void)zb_dismiss
 {
-    [self.view dismiss];
+    [self.view zb_dismiss];
 }
 
 @end

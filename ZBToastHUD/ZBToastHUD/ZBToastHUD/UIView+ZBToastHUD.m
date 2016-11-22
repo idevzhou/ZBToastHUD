@@ -127,7 +127,7 @@
 
 // loading and toast
 
-- (void)dismiss
+- (void)zb_dismiss
 {
     [self.hud dismiss];
 }

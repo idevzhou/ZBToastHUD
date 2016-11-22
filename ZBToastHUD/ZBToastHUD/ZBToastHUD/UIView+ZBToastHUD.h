@@ -37,6 +37,6 @@
 
 // loading and toast
 
-- (void)dismiss; // dismiss all hud, include loading and toast
+- (void)zb_dismiss; // dismiss all hud, include loading and toast
 
 @end
