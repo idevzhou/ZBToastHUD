@@ -87,13 +87,21 @@
     }
     else if (3 == indexPath.row)
     {
-        [self zb_showLoadingWithStyle:ZBToastHUDLoadingStyleLight maskType:ZBToastHUDLoadingMaskTypeDark];
+        [self zb_showLoadingWithMessage:@"加载中..."];
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [self zb_dismissToast];
         });
     }
     else if (4 == indexPath.row)
+    {
+        [self zb_showLoadingWithStyle:ZBToastHUDLoadingStyleLight maskType:ZBToastHUDLoadingMaskTypeDark];
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self zb_dismissToast];
+        });
+    }
+    else if (5 == indexPath.row)
     {
         [self.navigationController zb_showLoadingWithMaskType:ZBToastHUDLoadingMaskTypeDark];
         
@@ -131,6 +139,7 @@
         _dataSource = @[@"default loading",
                         @"style light",
                         @"maskType dark",
+                        @"default loading with message",
                         @"style light and maskType dark",
                         @"self.navigationController maskType dark"];
     }

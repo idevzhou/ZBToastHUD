@@ -16,6 +16,7 @@ static NSString *const ZBToastHUDLoadingAnimationKey = @"rotationAnimation";
 // loading
 @property (nonatomic, strong) UIView *loadingHUDView;
 @property (nonatomic, strong) UIImageView *loadingImageView;
+@property (nonatomic, strong) UILabel *loadingMessageLabel;
 @property (nonatomic, assign) ZBToastHUDLoadingMaskType maskType;
 
 // toast
@@ -55,14 +56,26 @@ static NSString *const ZBToastHUDLoadingAnimationKey = @"rotationAnimation";
     if (self.isLoadingHUD)
     {
         self.frame = [UIScreen mainScreen].bounds;
-        self.loadingHUDView.frame = CGRectMake((screenWidth-72)/2.0, (screenHeight-72)/2.0, 72, 72);
-        self.loadingImageView.frame = CGRectMake((72-32)/2.0, (72-32)/2.0, 32, 32);
+        
+        if (self.loadingMessageLabel.text.length > 0)
+        {
+            self.loadingHUDView.frame = CGRectMake((screenWidth-108)/2.0, (screenHeight-88)/2.0, 108, 88);
+            self.loadingImageView.frame = CGRectMake((108-32)/2.0, 16, 32, 32);
+            self.loadingMessageLabel.frame = CGRectMake(12, CGRectGetMaxY(self.loadingImageView.frame)+12, 108-24, 13);
+        }
+        else
+        {
+            self.loadingHUDView.frame = CGRectMake((screenWidth-72)/2.0, (screenHeight-72)/2.0, 72, 72);
+            self.loadingImageView.frame = CGRectMake((72-32)/2.0, (72-32)/2.0, 32, 32);
+            self.loadingMessageLabel.frame = CGRectZero;
+        }
         
         // style
         if (self.style == ZBToastHUDLoadingStyleLight)
         {
             self.loadingImageView.image = [UIImage imageNamed:@"ZBToastHUD.bundle/ZBToastHUD_LoadingStyleLight"];
             self.loadingHUDView.backgroundColor = [UIColor clearColor];
+            self.loadingMessageLabel.textColor = [self colorWithValue:0x999999];
         }
         else
         {
@@ -70,6 +83,7 @@ static NSString *const ZBToastHUDLoadingAnimationKey = @"rotationAnimation";
             self.loadingHUDView.backgroundColor = [self colorWithValue:0x333333 alpha:0.8];
             self.loadingHUDView.layer.cornerRadius = 4.0;
             self.loadingHUDView.layer.masksToBounds = YES;
+            self.loadingMessageLabel.textColor = [UIColor whiteColor];
         }
         
         // maskType
@@ -78,18 +92,21 @@ static NSString *const ZBToastHUDLoadingAnimationKey = @"rotationAnimation";
             self.backgroundColor = [UIColor clearColor];
             [self addSubview:self.loadingHUDView];
             [self.loadingHUDView addSubview:self.loadingImageView];
+            [self.loadingHUDView addSubview:self.loadingMessageLabel];
         }
         else if (self.maskType == ZBToastHUDLoadingMaskTypeDark)
         {
             self.backgroundColor = [UIColor colorWithWhite:0 alpha:0.4];
             [self addSubview:self.loadingHUDView];
             [self.loadingHUDView addSubview:self.loadingImageView];
+            [self.loadingHUDView addSubview:self.loadingMessageLabel];
         }
         else
         {
             self.frame = CGRectZero;
             [self addSubview:self.loadingHUDView];
             [self.loadingHUDView addSubview:self.loadingImageView];
+            [self.loadingHUDView addSubview:self.loadingMessageLabel];
         }
     }
     // toast
@@ -179,6 +196,8 @@ static NSString *const ZBToastHUDLoadingAnimationKey = @"rotationAnimation";
 
 - (NSMutableAttributedString *)attributedStringWithText:(NSString *)text font:(UIFont *)font lineSpacing:(CGFloat)lineSpacing
 {
+    if (text == nil) text = @"";
+    if (lineSpacing <= 0) lineSpacing = 0;
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     paragraphStyle.lineSpacing = lineSpacing;
     NSDictionary *attributes = @{NSFontAttributeName:font, NSParagraphStyleAttributeName:paragraphStyle};
@@ -188,6 +207,8 @@ static NSString *const ZBToastHUDLoadingAnimationKey = @"rotationAnimation";
 
 - (CGFloat)attributedStringHeightWithLabelWidth:(CGFloat)width text:(NSString *)text font:(UIFont *)font lineSpacing:(CGFloat)lineSpacing
 {
+    if (text == nil) text = @"";
+    if (lineSpacing <= 0) lineSpacing = 0;
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     paragraphStyle.lineSpacing = lineSpacing;
     NSDictionary *attributes = @{NSFontAttributeName:font, NSParagraphStyleAttributeName:paragraphStyle};
@@ -197,6 +218,8 @@ static NSString *const ZBToastHUDLoadingAnimationKey = @"rotationAnimation";
 
 - (CGFloat)attributedStringWidthWithLabelHeight:(CGFloat)height text:(NSString *)text font:(UIFont *)font lineSpacing:(CGFloat)lineSpacing
 {
+    if (text == nil) text = @"";
+    if (lineSpacing <= 0) lineSpacing = 0;
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     paragraphStyle.lineSpacing = lineSpacing;
     NSDictionary *attributes = @{NSFontAttributeName:font, NSParagraphStyleAttributeName:paragraphStyle};
@@ -215,8 +238,19 @@ static NSString *const ZBToastHUDLoadingAnimationKey = @"rotationAnimation";
 
 - (void)showLoadingWithMaskType:(ZBToastHUDLoadingMaskType)maskType
 {
+    [self showLoadingWithMessage:@"" maskType:maskType];
+}
+
+- (void)showLoadingWithMessage:(NSString *)message
+{
+    [self showLoadingWithMessage:message maskType:ZBToastHUDLoadingMaskTypeNone];
+}
+
+- (void)showLoadingWithMessage:(NSString *)message maskType:(ZBToastHUDLoadingMaskType)maskType
+{
     self.maskType = maskType;
     self.isLoadingHUD = YES;
+    self.loadingMessageLabel.text = message;
     
     [self setNeedsLayout];
     [self layoutIfNeeded];
@@ -366,6 +400,17 @@ static NSString *const ZBToastHUDLoadingAnimationKey = @"rotationAnimation";
         _loadingImageView = [[UIImageView alloc] init];
     }
     return _loadingImageView;
+}
+
+- (UILabel *)loadingMessageLabel
+{
+    if (!_loadingMessageLabel) {
+        _loadingMessageLabel = [[UILabel alloc] init];
+        _loadingMessageLabel.font = [UIFont systemFontOfSize:12];
+        _loadingMessageLabel.textAlignment = NSTextAlignmentCenter;
+        _loadingMessageLabel.textColor = [UIColor whiteColor];
+    }
+    return _loadingMessageLabel;
 }
 
 - (void)setStyle:(ZBToastHUDLoadingStyle)style

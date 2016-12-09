@@ -18,6 +18,11 @@
 - (void)zb_showLoadingWithMaskType:(ZBToastHUDLoadingMaskType)maskType;
 - (void)zb_showLoadingWithStyle:(ZBToastHUDLoadingStyle)style maskType:(ZBToastHUDLoadingMaskType)maskType;
 
+- (void)zb_showLoadingWithMessage:(NSString *)message;
+- (void)zb_showLoadingWithMessage:(NSString *)message style:(ZBToastHUDLoadingStyle)style;
+- (void)zb_showLoadingWithMessage:(NSString *)message maskType:(ZBToastHUDLoadingMaskType)maskType;
+- (void)zb_showLoadingWithMessage:(NSString *)message style:(ZBToastHUDLoadingStyle)style maskType:(ZBToastHUDLoadingMaskType)maskType;
+
 - (void)zb_dismissLoading;
 - (void)zb_dismissLoadingWithCompletion:(ZBToastHUDLoadingDismissCompletion)completion;
 - (void)zb_dismissLoadingWithDelay:(NSTimeInterval)delay;

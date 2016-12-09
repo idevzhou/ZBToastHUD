@@ -30,7 +30,27 @@
 
 - (void)zb_showLoadingWithStyle:(ZBToastHUDLoadingStyle)style maskType:(ZBToastHUDLoadingMaskType)maskType
 {
-    [self.view zb_showLoadingWithStyle:style maskType:maskType];
+    [self zb_showLoadingWithMessage:@"" style:style maskType:maskType];
+}
+
+- (void)zb_showLoadingWithMessage:(NSString *)message
+{
+    [self zb_showLoadingWithMessage:message style:ZBToastHUDLoadingStyleDark maskType:ZBToastHUDLoadingMaskTypeClear];
+}
+
+- (void)zb_showLoadingWithMessage:(NSString *)message style:(ZBToastHUDLoadingStyle)style
+{
+    [self zb_showLoadingWithMessage:message style:style maskType:ZBToastHUDLoadingMaskTypeClear];
+}
+
+- (void)zb_showLoadingWithMessage:(NSString *)message maskType:(ZBToastHUDLoadingMaskType)maskType
+{
+    [self zb_showLoadingWithMessage:message style:ZBToastHUDLoadingStyleDark maskType:maskType];
+}
+
+- (void)zb_showLoadingWithMessage:(NSString *)message style:(ZBToastHUDLoadingStyle)style maskType:(ZBToastHUDLoadingMaskType)maskType
+{
+    [self.view zb_showLoadingWithMessage:message style:style maskType:maskType];
 }
 
 - (void)zb_dismissLoading

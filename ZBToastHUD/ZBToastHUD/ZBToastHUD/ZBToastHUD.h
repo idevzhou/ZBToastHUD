@@ -29,6 +29,8 @@ typedef void (^ZBToastHUDLoadingDismissCompletion)(void);
 
 - (void)showLoading;
 - (void)showLoadingWithMaskType:(ZBToastHUDLoadingMaskType)maskType;
+- (void)showLoadingWithMessage:(NSString *)message;
+- (void)showLoadingWithMessage:(NSString *)message maskType:(ZBToastHUDLoadingMaskType)maskType;
 
 - (void)dismissLoading;
 - (void)dismissLoadingWithCompletion:(ZBToastHUDLoadingDismissCompletion)completion;
