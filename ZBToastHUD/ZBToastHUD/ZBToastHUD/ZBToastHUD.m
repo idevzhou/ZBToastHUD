@@ -8,7 +8,7 @@
 
 #import "ZBToastHUD.h"
 
-static const CGFloat ZBToastHUDToastDismissDuration = 1.0;
+static const CGFloat ZBToastHUDToastDismissDuration = 1.5;
 static NSString *const ZBToastHUDLoadingAnimationKey = @"rotationAnimation";
 
 @interface ZBToastHUD () <CAAnimationDelegate>
@@ -191,39 +191,59 @@ static NSString *const ZBToastHUDLoadingAnimationKey = @"rotationAnimation";
 
 - (UIColor *)colorWithValue:(NSUInteger)rgbValue alpha:(CGFloat)alpha
 {
-    return [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:alpha];
+    return [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0
+                           green:((float)((rgbValue & 0xFF00) >> 8))/255.0
+                            blue:((float)(rgbValue & 0xFF))/255.0
+                           alpha:alpha];
 }
 
 - (NSMutableAttributedString *)attributedStringWithText:(NSString *)text font:(UIFont *)font lineSpacing:(CGFloat)lineSpacing
 {
-    if (text == nil) text = @"";
-    if (lineSpacing <= 0) lineSpacing = 0;
+    if (!text) text = @"";
+    if (!font) font = [UIFont systemFontOfSize:17.0];
+    if (lineSpacing < 0) lineSpacing = 0;
+    
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     paragraphStyle.lineSpacing = lineSpacing;
     NSDictionary *attributes = @{NSFontAttributeName:font, NSParagraphStyleAttributeName:paragraphStyle};
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:text attributes:attributes];
+    
     return attributedString;
 }
 
 - (CGFloat)attributedStringHeightWithLabelWidth:(CGFloat)width text:(NSString *)text font:(UIFont *)font lineSpacing:(CGFloat)lineSpacing
 {
-    if (text == nil) text = @"";
-    if (lineSpacing <= 0) lineSpacing = 0;
+    if (width < 0) width = 0;
+    if (!text) text = @"";
+    if (!font) font = [UIFont systemFontOfSize:17.0];
+    if (lineSpacing < 0) lineSpacing = 0;
+    
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     paragraphStyle.lineSpacing = lineSpacing;
     NSDictionary *attributes = @{NSFontAttributeName:font, NSParagraphStyleAttributeName:paragraphStyle};
-    CGFloat height = [text boundingRectWithSize:CGSizeMake(width, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:attributes context:nil].size.height;
+    CGFloat height = [text boundingRectWithSize:CGSizeMake(width, MAXFLOAT)
+                                        options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
+                                     attributes:attributes
+                                        context:nil].size.height;
+    
     return height;
 }
 
 - (CGFloat)attributedStringWidthWithLabelHeight:(CGFloat)height text:(NSString *)text font:(UIFont *)font lineSpacing:(CGFloat)lineSpacing
 {
-    if (text == nil) text = @"";
-    if (lineSpacing <= 0) lineSpacing = 0;
+    if (height < 0) height = 0;
+    if (!text) text = @"";
+    if (!font) font = [UIFont systemFontOfSize:17.0];
+    if (lineSpacing < 0) lineSpacing = 0;
+    
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     paragraphStyle.lineSpacing = lineSpacing;
     NSDictionary *attributes = @{NSFontAttributeName:font, NSParagraphStyleAttributeName:paragraphStyle};
-    CGFloat width = [text boundingRectWithSize:CGSizeMake(MAXFLOAT, height) options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:attributes context:nil].size.width;
+    CGFloat width = [text boundingRectWithSize:CGSizeMake(MAXFLOAT, height)
+                                       options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
+                                    attributes:attributes
+                                       context:nil].size.width;
+    
     return width;
 }
 
@@ -276,13 +296,8 @@ static NSString *const ZBToastHUDLoadingAnimationKey = @"rotationAnimation";
 
 - (void)dismissLoadingWithDelay:(NSTimeInterval)delay completion:(ZBToastHUDLoadingDismissCompletion)completion
 {
-    if (self.hidden == YES || self.loadingHUDView == nil) {
-        return;
-    }
-    
-    if (delay < 0) {
-        delay = 0;
-    }
+    if (self.hidden == YES || !self.loadingHUDView) return;
+    if (delay < 0) delay = 0;
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         self.hidden = YES;
@@ -362,10 +377,7 @@ static NSString *const ZBToastHUDLoadingAnimationKey = @"rotationAnimation";
 
 - (void)dismissToast
 {
-    if (self.hidden == YES || self.toastHUDView == nil) {
-        return;
-    }
-    
+    if (self.hidden == YES || !self.toastHUDView) return;
     self.hidden = YES;
     [self removeFromSuperview];
 }
@@ -374,17 +386,15 @@ static NSString *const ZBToastHUDLoadingAnimationKey = @"rotationAnimation";
 
 - (void)dismiss
 {
-    if (self.loadingHUDView != nil)
-    {
+    if (self.loadingHUDView) {
         [self dismissLoading];
     }
-    if (self.toastHUDView != nil)
-    {
+    if (self.toastHUDView) {
         [self dismissToast];
     }
 }
 
-#pragma mark - getter and setter
+#pragma mark - getter
 
 - (UIView *)loadingHUDView
 {
@@ -411,11 +421,6 @@ static NSString *const ZBToastHUDLoadingAnimationKey = @"rotationAnimation";
         _loadingMessageLabel.textColor = [UIColor whiteColor];
     }
     return _loadingMessageLabel;
-}
-
-- (void)setStyle:(ZBToastHUDLoadingStyle)style
-{
-    _style = style;
 }
 
 - (UIView *)toastHUDView
@@ -447,6 +452,13 @@ static NSString *const ZBToastHUDLoadingAnimationKey = @"rotationAnimation";
         _toastMessageLabel.numberOfLines = 0;
     }
     return _toastMessageLabel;
+}
+
+#pragma mark - setter
+
+- (void)setStyle:(ZBToastHUDLoadingStyle)style
+{
+    _style = style;
 }
 
 @end
