@@ -60,6 +60,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
     if (0 == indexPath.row) {
         LoadingViewController *loadingVC = [[LoadingViewController alloc] init];
         [self.navigationController pushViewController:loadingVC animated:YES];

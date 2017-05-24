@@ -165,6 +165,7 @@ static NSString *const ZBToastHUDLoadingAnimationKey = @"rotationAnimation";
             self.loadingHUDView.frame = CGRectMake((screenWidth-108)/2.0, (screenHeight-88)/2.0, 108, 88);
             self.loadingImageView.frame = CGRectMake((108-32)/2.0, 16, 32, 32);
             self.loadingMessageLabel.frame = CGRectMake(12, CGRectGetMaxY(self.loadingImageView.frame)+12, 108-24, 13);
+            self.loadingMessageLabel.numberOfLines = 1;
         }
         else
         {
@@ -222,43 +223,67 @@ static NSString *const ZBToastHUDLoadingAnimationKey = @"rotationAnimation";
         if (self.toastImageView.image)
         {
             CGFloat toastMessageLabelWidth = [NSMutableAttributedString zb_attributedStringWidthWithText:self.toastMessageLabel.text font:self.toastMessageLabel.font lineSpacing:0.0 height:13];
-            if (toastMessageLabelWidth <= 96-24) {
+            if (toastMessageLabelWidth < 96-24) {
                 toastMessageLabelWidth = 96-24;
             }
-            if (toastMessageLabelWidth >= screenWidth*0.75-24) {
-                toastMessageLabelWidth = screenWidth*0.75-24;
-            }
             
-            self.frame = CGRectMake((screenWidth-(toastMessageLabelWidth+24))/2.0, (screenHeight-76)/2.0, toastMessageLabelWidth+24, 76);
-            self.toastHUDView.frame = self.bounds;
-            self.toastImageView.frame = CGRectMake((toastMessageLabelWidth+24-24)/2.0, 18, 24, 24);
-            self.toastMessageLabel.frame = CGRectMake(12, CGRectGetMaxY(self.toastImageView.frame)+8, toastMessageLabelWidth, 13);
+            // single line
+            if (toastMessageLabelWidth < screenWidth*0.75-24)
+            {
+                self.frame = CGRectMake((screenWidth-(toastMessageLabelWidth+24))/2.0, (screenHeight-76)/2.0, toastMessageLabelWidth+24, 76);
+                self.toastHUDView.frame = self.bounds;
+                self.toastImageView.frame = CGRectMake((toastMessageLabelWidth+24-24)/2.0, 18, 24, 24);
+                self.toastMessageLabel.frame = CGRectMake(12, CGRectGetMaxY(self.toastImageView.frame)+8, toastMessageLabelWidth, 13);
+                self.toastMessageLabel.numberOfLines = 1;
+            }
+            // multiple line
+            else
+            {
+                toastMessageLabelWidth = screenWidth*0.75-24;
+                CGFloat toastMessageLabelHeight = [NSMutableAttributedString zb_attributedStringHeightWithText:self.toastMessageLabel.text font:self.toastMessageLabel.font lineSpacing:3.0 width:toastMessageLabelWidth];
+                toastMessageLabelHeight = MIN(toastMessageLabelHeight, screenHeight-64*2-50-12);
+                
+                NSMutableAttributedString *messageAttributedText = [NSMutableAttributedString zb_attributedStringWithText:self.toastMessageLabel.text font:self.toastMessageLabel.font lineSpacing:3.0];
+                self.toastMessageLabel.attributedText = messageAttributedText;
+                self.toastMessageLabel.textAlignment = NSTextAlignmentCenter;
+                
+                self.frame = CGRectMake((screenWidth-(toastMessageLabelWidth+24))/2.0, (screenHeight-(50+toastMessageLabelHeight+12))/2.0, 12+toastMessageLabelWidth+12, 50+toastMessageLabelHeight+12);
+                self.toastHUDView.frame = self.bounds;
+                self.toastImageView.frame = CGRectMake((toastMessageLabelWidth+24-24)/2.0, 18, 24, 24);
+                self.toastMessageLabel.frame = CGRectMake(12, CGRectGetMaxY(self.toastImageView.frame)+8, toastMessageLabelWidth, toastMessageLabelHeight);
+                self.toastMessageLabel.numberOfLines = 0;
+                self.toastMessageLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+            }
         }
         else
         {
             CGFloat toastMessageLabelWidth = [NSMutableAttributedString zb_attributedStringWidthWithText:self.toastMessageLabel.text font:self.toastMessageLabel.font lineSpacing:0.0 height:15];
             // single line
-            if (toastMessageLabelWidth <= screenWidth*0.75-24)
+            if (toastMessageLabelWidth < screenWidth*0.75-24)
             {
                 self.frame = CGRectMake((screenWidth-(toastMessageLabelWidth+24))/2.0, (screenHeight-44)/2.0, toastMessageLabelWidth+24, 44);
                 self.toastHUDView.frame = self.bounds;
                 self.toastImageView.frame = CGRectZero;
                 self.toastMessageLabel.frame = CGRectMake(12, (44-15)/2.0, toastMessageLabelWidth, 15);
+                self.toastMessageLabel.numberOfLines = 1;
             }
             // multiple lines
             else
             {
                 toastMessageLabelWidth = screenWidth*0.75-24;
                 CGFloat toastMessageLabelHeight = [NSMutableAttributedString zb_attributedStringHeightWithText:self.toastMessageLabel.text font:self.toastMessageLabel.font lineSpacing:3.0 width:toastMessageLabelWidth];
+                toastMessageLabelHeight = MIN(toastMessageLabelHeight, screenHeight-64*2-12*2);
                 
                 NSMutableAttributedString *messageAttributedText = [NSMutableAttributedString zb_attributedStringWithText:self.toastMessageLabel.text font:self.toastMessageLabel.font lineSpacing:3.0];
                 self.toastMessageLabel.attributedText = messageAttributedText;
                 self.toastMessageLabel.textAlignment = NSTextAlignmentCenter;
                 
-                self.frame = CGRectMake((screenWidth-(toastMessageLabelWidth+24))/2.0, (screenHeight-(toastMessageLabelHeight+24))/2.0, toastMessageLabelWidth+24, toastMessageLabelHeight+24);
+                self.frame = CGRectMake((screenWidth-(toastMessageLabelWidth+24))/2.0, (screenHeight-(12+toastMessageLabelHeight+12))/2.0, 12+toastMessageLabelWidth+12, 12+toastMessageLabelHeight+12);
                 self.toastHUDView.frame = self.bounds;
                 self.toastImageView.frame = CGRectZero;
                 self.toastMessageLabel.frame = CGRectMake(12, 12, toastMessageLabelWidth, toastMessageLabelHeight);
+                self.toastMessageLabel.numberOfLines = 0;
+                self.toastMessageLabel.lineBreakMode = NSLineBreakByTruncatingTail;
             }
         }
     }
@@ -294,7 +319,7 @@ static NSString *const ZBToastHUDLoadingAnimationKey = @"rotationAnimation";
     [self layoutIfNeeded];
     
     self.hidden = NO;
-    [self startRotationAnimation];
+    [self _startRotationAnimation];
 }
 
 - (void)dismissLoading
@@ -319,7 +344,7 @@ static NSString *const ZBToastHUDLoadingAnimationKey = @"rotationAnimation";
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         self.hidden = YES;
-        [self stopRotationAnimation];
+        [self _stopRotationAnimation];
         [self removeFromSuperview];
         
         if (completion) {
@@ -332,6 +357,8 @@ static NSString *const ZBToastHUDLoadingAnimationKey = @"rotationAnimation";
 
 - (void)showWithMessage:(NSString *)message
 {
+    if (!message || message.length == 0) return;
+    
     self.toastImageView.image = nil;
     self.toastMessageLabel.text = message;
     self.toastMessageLabel.font = [UIFont systemFontOfSize:14];
@@ -339,10 +366,10 @@ static NSString *const ZBToastHUDLoadingAnimationKey = @"rotationAnimation";
     [self showToast];
 }
 
-- (void)showNoNetwork
+- (void)showNoNetworkWithMessage:(NSString *)message
 {
     UIImage *noNetworkImage = [UIImage imageNamed:@"ZBToastHUD.bundle/ZBToastHUD_ToastNoNetwork"];
-    [self showImage:noNetworkImage message:@"无网络连接"];
+    [self showImage:noNetworkImage message:message];
 }
 
 - (void)showSuccessWithMessage:(NSString *)message
@@ -414,7 +441,7 @@ static NSString *const ZBToastHUDLoadingAnimationKey = @"rotationAnimation";
 
 #pragma mark - private method
 
-- (void)startRotationAnimation
+- (void)_startRotationAnimation
 {
     CABasicAnimation *rotationAnimation;
     rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
@@ -429,7 +456,7 @@ static NSString *const ZBToastHUDLoadingAnimationKey = @"rotationAnimation";
     [self.loadingImageView.layer addAnimation:rotationAnimation forKey:ZBToastHUDLoadingAnimationKey];
 }
 
-- (void)stopRotationAnimation
+- (void)_stopRotationAnimation
 {
     [self.loadingImageView.layer removeAnimationForKey:ZBToastHUDLoadingAnimationKey];
 }
@@ -459,6 +486,7 @@ static NSString *const ZBToastHUDLoadingAnimationKey = @"rotationAnimation";
         _loadingMessageLabel.font = [UIFont systemFontOfSize:12];
         _loadingMessageLabel.textAlignment = NSTextAlignmentCenter;
         _loadingMessageLabel.textColor = [UIColor whiteColor];
+        _loadingMessageLabel.lineBreakMode = NSLineBreakByTruncatingTail;
     }
     return _loadingMessageLabel;
 }
@@ -489,7 +517,7 @@ static NSString *const ZBToastHUDLoadingAnimationKey = @"rotationAnimation";
         _toastMessageLabel.font = [UIFont systemFontOfSize:12];
         _toastMessageLabel.textAlignment = NSTextAlignmentCenter;
         _toastMessageLabel.textColor = [UIColor whiteColor];
-        _toastMessageLabel.numberOfLines = 0;
+        _toastMessageLabel.lineBreakMode = NSLineBreakByTruncatingTail;
     }
     return _toastMessageLabel;
 }

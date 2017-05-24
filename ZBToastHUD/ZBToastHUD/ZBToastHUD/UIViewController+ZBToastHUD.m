@@ -80,9 +80,9 @@
     [self.view zb_showWithMessage:message];
 }
 
-- (void)zb_showNoNetwork
+- (void)zb_showNoNetworkWithMessage:(NSString *)message
 {
-    [self.view zb_showNoNetwork];
+    [self.view zb_showNoNetworkWithMessage:message];
 }
 
 - (void)zb_showSuccessWithMessage:(NSString *)message

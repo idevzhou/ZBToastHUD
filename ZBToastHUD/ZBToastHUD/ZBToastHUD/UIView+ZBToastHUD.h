@@ -32,7 +32,7 @@
 
 - (void)zb_showWithMessage:(NSString *)message;
 
-- (void)zb_showNoNetwork;                                          // 无网络连接
+- (void)zb_showNoNetworkWithMessage:(NSString *)message;           // 无网络连接
 - (void)zb_showSuccessWithMessage:(NSString *)message;             // 对勾
 - (void)zb_showErrorWithMessage:(NSString *)message;               // 叉叉
 - (void)zb_showWarningWithMessage:(NSString *)message;             // 叹号

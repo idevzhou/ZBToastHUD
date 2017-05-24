@@ -95,11 +95,11 @@
     [self bringSubviewToFront:self.hud];
 }
 
-- (void)zb_showNoNetwork
+- (void)zb_showNoNetworkWithMessage:(NSString *)message
 {
     [self.hud dismiss];
     self.hud = [[ZBToastHUD alloc] init];
-    [self.hud showNoNetwork];
+    [self.hud showNoNetworkWithMessage:message];
     [self addSubview:self.hud];
     [self bringSubviewToFront:self.hud];
 }

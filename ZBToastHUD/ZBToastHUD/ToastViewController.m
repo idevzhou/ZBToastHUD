@@ -60,26 +60,28 @@
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
+    NSString *message = @"3秒后消失";
     
     if (0 == indexPath.row)
     {
-        [self zb_showWithMessage:@"3秒后消失"];
+        [self zb_showWithMessage:message];
     }
     else if (1 == indexPath.row)
     {
-        [self zb_showNoNetwork];
+        message = @"无网络连接";
+        [self zb_showNoNetworkWithMessage:message];
     }
     else if (2 == indexPath.row)
     {
-        [self zb_showSuccessWithMessage:@"3秒后消失"];
+        [self zb_showSuccessWithMessage:message];
     }
     else if (3 == indexPath.row)
     {
-        [self zb_showErrorWithMessage:@"3秒后消失"];
+        [self zb_showErrorWithMessage:message];
     }
     else if (4 == indexPath.row)
     {
-        [self zb_showWarningWithMessage:@"3秒后消失"];
+        [self zb_showWarningWithMessage:message];
     }
 }
 
@@ -90,7 +92,7 @@
     return NSStringFromClass(self.class);
 }
 
-#pragma mark - getter and setter
+#pragma mark - getter
 
 - (UITableView *)tableView
 {

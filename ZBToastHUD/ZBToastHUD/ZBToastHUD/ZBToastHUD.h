@@ -41,7 +41,7 @@ typedef void (^ZBToastHUDLoadingDismissCompletion)(void);
 
 - (void)showWithMessage:(NSString *)message;
 
-- (void)showNoNetwork;                                          // 无网络连接
+- (void)showNoNetworkWithMessage:(NSString *)message;           // 无网络连接
 - (void)showSuccessWithMessage:(NSString *)message;             // 对勾
 - (void)showErrorWithMessage:(NSString *)message;               // 叉叉
 - (void)showWarningWithMessage:(NSString *)message;             // 叹号

@@ -60,7 +60,6 @@
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    
     if (0 == indexPath.row)
     {
         [self zb_showLoading];
@@ -118,7 +117,7 @@
     return NSStringFromClass(self.class);
 }
 
-#pragma mark - getter and setter
+#pragma mark - getter
 
 - (UITableView *)tableView
 {
